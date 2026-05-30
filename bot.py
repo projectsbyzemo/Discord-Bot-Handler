@@ -1,5 +1,5 @@
 client_name = "Bot_Name"
-version = "0.1.3"
+version = "0.1.5"
 
 # Initialization
 import os, sys, subprocess
@@ -21,7 +21,6 @@ guilds = [discord.Object(id=int(gid)) for gid in os.getenv('guilds', '').replace
 
 # Client
 intents = discord.Intents.default()
-intents.message_content = True
 client = commands.Bot(command_prefix='?', intents=intents)
 
 @client.event
@@ -34,10 +33,6 @@ async def on_ready():
     print(f"{client_name} ({version}) is online.")
 
 ## Commands
-@client.command()
-async def ping(ctx: commands.Context):
-    await ctx.send(f"Pong! {client.latency * 1000:.2f} ms ||{ctx.author.mention}||")
-
 @client.tree.command(name="ping", description="Check latency.")
 async def slash_ping(interaction: discord.Interaction):
     await interaction.response.send_message(f"Pong! {client.latency * 1000:.2f} ms", ephemeral=True)
