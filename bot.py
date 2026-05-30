@@ -1,5 +1,5 @@
 client_name = "Mānēs"
-version = "0.3.0"
+version = "0.3.1"
 
 # Initialization
 import os, sys, subprocess
@@ -29,7 +29,7 @@ async def on_ready():
     print(f"{client_name} ({version}) is online.")
 
 ## Commands
-@tree.command(name="ping", description="Check latency.")
+@tree.command(name="ping", description="Check response latency.")
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message(f"Pong! {client.latency * 1000:.2f} ms", ephemeral=True)
 
