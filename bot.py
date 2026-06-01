@@ -1,6 +1,3 @@
-client_name = "Mānēs"
-version = "0.4.0"
-
 # Initialization
 import asyncio, os, sys, subprocess
 def install():
@@ -63,7 +60,7 @@ tree = app_commands.CommandTree(client)
 @client.event
 async def on_ready():
     await tree.sync()
-    print(f"{client_name} ({version}) is online.")
+    print(f"{os.getenv('client')} ({os.getenv('version')}) is online.")
     if not hasattr(client, "escape_stop_task"):
         client.escape_stop_task = asyncio.create_task(stop_on_escape())
 
@@ -75,6 +72,6 @@ async def ping(interaction: discord.Interaction):
 
 @tree.command(name="version", description="Check the bot's version.")
 async def version(interaction: discord.Interaction):
-    await interaction.response.send_message(f"Version: {version}", ephemeral=True)
+    await interaction.response.send_message(f"Version: {os.getenv('version')}", ephemeral=True)
 
 client.run(token)
