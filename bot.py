@@ -64,14 +64,29 @@ async def on_ready():
     if not hasattr(client, "escape_stop_task"):
         client.escape_stop_task = asyncio.create_task(stop_on_escape())
 
-
-## Commands
-@tree.command(name="ping", description="Check response latency.")
+## Ephemeral Commands
+@tree.command(name="ping", description="Check the bot's response latency.")
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message(f"Pong! {client.latency * 1000:.2f} ms", ephemeral=True)
 
 @tree.command(name="version", description="Check the bot's version.")
 async def version(interaction: discord.Interaction):
     await interaction.response.send_message(f"Version: {os.getenv('version')}", ephemeral=True)
+
+@tree.command(name="purge", description="Delete a specified number of messages.")
+@app_commands.describe(amount="Delete 1 to 100 messages.") 
+@app_commands.guild_only()
+async def purge(interaction: discord.Interaction, amount: app_commands.Range[int, 1, 100]):
+    await interaction.response.defer(ephemeral=True, thinking=True)
+    try:
+        deleted = await interaction.channel.purge(limit=amount)
+    except discord.Forbidden:
+        await interaction.followup.send("I need Manage Messages in this channel.", ephemeral=True)
+        return
+    except discord.HTTPException as error:
+        await interaction.followup.send(f"Discord rejected the purge request: {error}", ephemeral=True)
+        return
+
+    await interaction.followup.send(f"Purged {len(deleted)} messages.", ephemeral=True)
 
 client.run(token)
